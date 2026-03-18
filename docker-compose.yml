@@ -1,0 +1,45 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:latest
+    container_name: controle-gastos-db
+    environment:
+      POSTGRES_DB: ControleGastosDb_Dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - controle-gastos-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # API Application
+  api:
+    build:
+      context: ./ControleGastosResidenciais.Api
+      dockerfile: Dockerfile
+    container_name: controle-gastos-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=ControleGastosDb_Dev;Username=postgres;Password=postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - controle-gastos-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  controle-gastos-network:
+    driver: bridge
