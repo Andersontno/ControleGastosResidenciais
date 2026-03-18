@@ -56,6 +56,41 @@ public class CategoriaService : ICategoriaService
 
     public async Task<IEnumerable<object>> GetTotaisPorCategoriaAsync()
     {
-        throw new NotImplementedException();
+        /*
+         SQL Query:
+            SELECT
+                c."Id" as "CategoriaId",
+                c."Descricao" as "Descricao",
+                COALESCE(SUM(CASE WHEN t."Tipo" = 2 THEN t."Valor" ELSE 0 END),0) as "TotalReceitas",
+                COALESCE(SUM(CASE WHEN t."Tipo" = 1 THEN t."Valor" ELSE 0 END),0) as "TotalDespesas",
+                COALESCE(SUM(CASE WHEN t."Tipo" = 2 THEN t."Valor" ELSE -t."Valor" END),0) as "SaldoLiquido",
+                COUNT(t."Id") as "QuantidadeTransacoes"
+            FROM "Categorias" c
+            LEFT JOIN "Transacoes" t on t."CategoriaId" = c."Id"
+            GROUP BY c."Id", c."Descricao"
+            ORDER BY c."Descricao"
+        */
+        var totaisPorCategoria = await _context.Categorias
+            .GroupJoin(_context.Transacoes,
+                c => c.Id,
+                t => t.CategoriaId,
+                (categoria, transacoes) => new
+                {
+                    CategoriaId = categoria.Id,
+                    Descricao = categoria.Descricao,
+                    TotalReceitas = transacoes
+                        .Where(t => t.Tipo == TipoTransacao.Receita)
+                        .Sum(t => (decimal?)t.Valor) ?? 0,
+                    TotalDespesas = transacoes
+                        .Where(t => t.Tipo == TipoTransacao.Despesa)
+                        .Sum(t => (decimal?)t.Valor) ?? 0,
+                    SaldoLiquido = transacoes
+                        .Sum(t => t.Tipo == TipoTransacao.Receita ? (decimal?)t.Valor : -(decimal?)t.Valor) ?? 0,
+                    QuantidadeTransacoes = transacoes.Count()
+                })
+            .OrderBy(c => c.Descricao)
+            .ToListAsync();
+
+        return totaisPorCategoria;
     }
 }

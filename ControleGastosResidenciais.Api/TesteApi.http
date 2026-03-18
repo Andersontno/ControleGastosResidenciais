@@ -31,6 +31,10 @@ Accept: application/json
 GET {{baseUrl}}/api/pessoas/019d008d-6f03-7ac7-b6b9-101d85f668ad
 Accept: application/json
 
+### Consultar totais por pessoa
+GET {{baseUrl}}/api/pessoas/totais
+Accept: application/json
+
 
 ##### CategoriasController #####
 
