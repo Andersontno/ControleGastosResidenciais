@@ -54,7 +54,7 @@ public class CategoriaService : ICategoriaService
         return await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<IEnumerable<object>> GetTotaisPorCategoriaAsync()
+    public async Task<object> GetTotaisPorCategoriaAsync()
     {
         /*
          SQL Query:
@@ -91,6 +91,21 @@ public class CategoriaService : ICategoriaService
             .OrderBy(c => c.Descricao)
             .ToListAsync();
 
-        return totaisPorCategoria;
+        // Calcular totais gerais
+        var totaisGerais = new
+        {
+            TotalReceitas = totaisPorCategoria.Sum(c => c.TotalReceitas),
+            TotalDespesas = totaisPorCategoria.Sum(c => c.TotalDespesas),
+            SaldoLiquido = totaisPorCategoria.Sum(c => c.SaldoLiquido),
+            TotalTransacoes = totaisPorCategoria.Sum(c => c.QuantidadeTransacoes)
+        };
+
+        var resultado = new
+        {
+            TotaisGerais = totaisGerais,
+            DetalhesPorCategoria = totaisPorCategoria
+        };
+
+        return resultado;
     }
 }

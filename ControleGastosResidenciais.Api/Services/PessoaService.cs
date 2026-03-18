@@ -99,7 +99,7 @@ public class PessoaService : IPessoaService
         return await _context.Pessoas.FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<IEnumerable<object>> GetTotaisPorPessoaAsync()
+    public async Task<object> GetTotaisPorPessoaAsync()
     {
         /*
          SQL Query:
@@ -116,6 +116,7 @@ public class PessoaService : IPessoaService
             GROUP BY p."Id", p."Nome", p."Idade"
             ORDER BY p."Nome"
         */
+
         var totaisPorPessoa = await _context.Pessoas
             .GroupJoin(_context.Transacoes,
                 p => p.Id,
@@ -138,7 +139,21 @@ public class PessoaService : IPessoaService
             .OrderBy(p => p.Nome)
             .ToListAsync();
 
-        return totaisPorPessoa;
+        var totaisGerais = new
+        {
+            TotalReceitas = totaisPorPessoa.Sum(p => p.TotalReceitas),
+            TotalDespesas = totaisPorPessoa.Sum(p => p.TotalDespesas),
+            SaldoLiquido = totaisPorPessoa.Sum(p => p.SaldoLiquido),
+            TotalTransacoes = totaisPorPessoa.Sum(p => p.QuantidadeTransacoes)
+        };
+
+        var resultado = new
+        {
+            TotaisPorPessoa = totaisPorPessoa,
+            TotaisGerais = totaisGerais
+        };
+
+        return resultado;
     }
 
 }

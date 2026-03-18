@@ -46,5 +46,5 @@ public interface IPessoaService
     /// Recupera os totais por pessoa.
     /// </summary>
     /// <returns>Uma coleção contendo os totais por pessoa</returns>
-    Task<IEnumerable<object>> GetTotaisPorPessoaAsync();
+    Task<object> GetTotaisPorPessoaAsync();
 }

@@ -31,5 +31,5 @@ public interface ICategoriaService
     /// Recupera os totais por categoria.
     /// </summary>
     /// <returns>Uma coleção contendo os totais por categoria</returns>
-    Task<IEnumerable<object>> GetTotaisPorCategoriaAsync();
+    Task<object> GetTotaisPorCategoriaAsync();
 }

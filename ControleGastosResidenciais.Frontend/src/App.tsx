@@ -3,8 +3,9 @@ import './index.css';
 import Pessoas from './components/Pessoas';
 import Categorias from './components/Categorias';
 import Transacoes from './components/Transacoes';
+import Relatorios from './components/Relatorios';
 
-type Tab = 'pessoas' | 'categorias' | 'transacoes';
+type Tab = 'pessoas' | 'categorias' | 'transacoes' | 'relatorios';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('pessoas');
@@ -17,6 +18,8 @@ function App() {
         return <Categorias />;
       case 'transacoes':
         return <Transacoes />;
+      case 'relatorios':
+        return <Relatorios />;
       default:
         return <Pessoas />;
     }
@@ -47,6 +50,12 @@ function App() {
             onClick={() => setActiveTab('transacoes')}
           >
             Transações
+          </button>
+          <button
+            className={`nav-button ${activeTab === 'relatorios' ? 'active' : ''}`}
+            onClick={() => setActiveTab('relatorios')}
+          >
+            Relatórios
           </button>
         </nav>
 

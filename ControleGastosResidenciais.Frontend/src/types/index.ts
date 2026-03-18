@@ -49,6 +49,43 @@ export interface CreateTransacaoDto {
   pessoaId: string;
 }
 
+// Estrutura básica de totais
+export interface TotaisGerais {
+  totalReceitas: number;
+  totalDespesas: number;
+  saldoLiquido: number;
+  totalTransacoes: number;
+}
+
+export interface TotalPorPessoa {
+  pessoaId: string;
+  nome: string;
+  idade: number;
+  totalReceitas: number;
+  totalDespesas: number;
+  saldoLiquido: number;
+  quantidadeTransacoes: number;
+}
+
+export interface TotalPorCategoria {
+  categoriaId: string;
+  descricao: string;
+  totalReceitas: number;
+  totalDespesas: number;
+  saldoLiquido: number;
+  quantidadeTransacoes: number;
+}
+
+export interface RelatorioTotaisPessoas {
+  totaisPorPessoa: TotalPorPessoa[];
+  totaisGerais: TotaisGerais;
+}
+
+export interface RelatorioTotaisCategorias {
+  detalhesPorCategoria: TotalPorCategoria[];
+  totaisGerais: TotaisGerais;
+}
+
 // Helper para converter enum para texto
 export const TipoTransacaoText = {
   [TipoTransacao.Despesa]: 'Despesa',
