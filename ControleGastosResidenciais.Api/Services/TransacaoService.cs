@@ -68,8 +68,7 @@ public class TransacaoService : ITransacaoService
         _context.Transacoes.Add(transacao);
         await _context.SaveChangesAsync();
 
-        // Reload para incluir as navigation properties
-        return await GetByIdAsync(transacao.Id) ?? transacao;
+        return transacao;
     }
 
     public async Task<IEnumerable<Transacao>> GetAllAsync()
