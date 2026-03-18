@@ -19,21 +19,51 @@ public class TransacaoService : ITransacaoService
 
     public async Task<Transacao> CreateAsync(Transacao transacao)
     {
+        // Validar descrição não vazia
+        if (string.IsNullOrWhiteSpace(transacao.Descricao))
+        {
+            throw new ArgumentException("Descrição não pode ser vazia");
+        }
+
+        // Validar quantidade de caracteres da descrição
+        if (transacao.Descricao.Length > 400)
+        {
+            throw new ArgumentException("Descrição não pode ter mais de 400 caracteres");
+        }
+
+        //Validar tipo de transação
+        if (!Enum.IsDefined(typeof(TipoTransacao), transacao.Tipo))
+        {
+            throw new ArgumentException("Tipo de transação inválido");
+        }
+
         // Validar se pessoa existe
         var pessoa = await _context.Pessoas.FindAsync(transacao.PessoaId);
         if (pessoa == null)
+        {
             throw new ArgumentException("Pessoa não encontrada");
+        }
 
         // Validar se categoria existe
         var categoria = await _context.Categorias.FindAsync(transacao.CategoriaId);
         if (categoria == null)
+        {
             throw new ArgumentException("Categoria não encontrada");
+        }
 
-        // Menores de 18 anos só podem fazer despesas
+        // Validar tipo de transação para menores de 18 anos
         if (pessoa.Idade < 18 && transacao.Tipo == TipoTransacao.Receita)
+        {
             throw new InvalidOperationException("Menores de 18 anos só podem registrar despesas");
+        }
 
-        //TODO Validar compatibilidade entre tipo da transação e finalidade da categoria
+        // Validar compatibilidade entre tipo da transação e finalidade da categoria
+        if (categoria.Finalidade != TipoFinalidade.Ambas &&
+            ((transacao.Tipo == TipoTransacao.Despesa && categoria.Finalidade != TipoFinalidade.Despesa) ||
+             (transacao.Tipo == TipoTransacao.Receita && categoria.Finalidade != TipoFinalidade.Receita)))
+        {
+            throw new InvalidOperationException("Tipo de transação incompatível com a finalidade da categoria");
+        }
 
         _context.Transacoes.Add(transacao);
         await _context.SaveChangesAsync();

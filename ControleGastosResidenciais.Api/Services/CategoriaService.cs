@@ -19,6 +19,24 @@ public class CategoriaService : ICategoriaService
 
     public async Task<Categoria> CreateAsync(Categoria categoria)
     {
+        //Validar finalidade da categoria
+        if (!Enum.IsDefined(typeof(TipoFinalidade), categoria.Finalidade))
+        {
+            throw new ArgumentException("Finalidade da categoria inválida");
+        }
+
+        // Validar descrição não vazia
+        if (string.IsNullOrWhiteSpace(categoria.Descricao))
+        {
+            throw new ArgumentException("Descrição não pode ser vazia");
+        }
+
+        // Validar quantidade de caracteres da descrição
+        if (categoria.Descricao.Length > 400)
+        {
+            throw new ArgumentException("Descrição não pode ter mais de 400 caracteres");
+        }
+
         _context.Categorias.Add(categoria);
         await _context.SaveChangesAsync();
         return categoria;

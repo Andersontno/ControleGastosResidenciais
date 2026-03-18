@@ -19,6 +19,26 @@ public class PessoaService : IPessoaService
 
     public async Task<Pessoa> CreateAsync(Pessoa pessoa)
     {
+
+        // Validar nome não vazio
+        if (string.IsNullOrWhiteSpace(pessoa.Nome))
+        {
+            throw new ArgumentException("Nome não pode ser vazio");
+        }
+
+        // Validar quantidade de caracteres do nome
+        if (pessoa.Nome.Length > 200)
+        {
+            throw new ArgumentException("Nome não pode ter mais de 200 caracteres");
+        }
+
+        // Validar idade maior que zero
+        if (pessoa.Idade <= 0)
+        {
+            throw new ArgumentException("Idade não pode ser negativa");
+        }
+
+
         _context.Pessoas.Add(pessoa);
         await _context.SaveChangesAsync();
         return pessoa;
@@ -26,6 +46,24 @@ public class PessoaService : IPessoaService
 
     public async Task<Pessoa?> UpdateAsync(Guid id, Pessoa pessoa)
     {
+        // Validar nome não vazio
+        if (string.IsNullOrWhiteSpace(pessoa.Nome))
+        {
+            throw new ArgumentException("Nome não pode ser vazio");
+        }
+
+        // Validar quantidade de caracteres do nome
+        if (pessoa.Nome.Length > 200)
+        {
+            throw new ArgumentException("Nome não pode ter mais de 200 caracteres");
+        }
+
+        // Validar idade maior que zero
+        if (pessoa.Idade <= 0)
+        {
+            throw new ArgumentException("Idade não pode ser negativa");
+        }
+
         var existingPessoa = await _context.Pessoas.FindAsync(id);
         if (existingPessoa == null)
             return null;
@@ -65,4 +103,5 @@ public class PessoaService : IPessoaService
     {
         throw new NotImplementedException();
     }
+
 }

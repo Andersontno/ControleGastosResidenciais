@@ -27,8 +27,15 @@ public class CategoriasController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var novaCategoria = await _categoriaService.CreateAsync(categoria);
-        return CreatedAtAction(nameof(GetCategoria), new { id = novaCategoria.Id }, novaCategoria);
+        try
+        {
+            var novaCategoria = await _categoriaService.CreateAsync(categoria);
+            return CreatedAtAction(nameof(GetCategoria), new { id = novaCategoria.Id }, novaCategoria);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>

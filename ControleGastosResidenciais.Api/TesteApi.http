@@ -11,16 +11,16 @@ Content-Type: application/json
 }
 
 ### Atualizar uma pessoa existente
-PUT {{baseUrl}}/api/pessoas/019cfdf4-db14-7d0d-95dd-5a98f3872837
+PUT {{baseUrl}}/api/pessoas/019d008d-6f03-7ac7-b6b9-101d85f668ad
 Content-Type: application/json
 
 {
     "nome": "João Silva",
-    "idade": 29
+    "idade": 15
 }
 
 ### Excluir uma pessoa
-DELETE {{baseUrl}}/api/pessoas/019cfdf4-db14-7d0d-95dd-5a98f3872837
+DELETE {{baseUrl}}/api/pessoas/019d008d-6f03-7ac7-b6b9-101d85f668ad
 Accept: application/json
 
 ### Listar todas as pessoas
@@ -28,7 +28,7 @@ GET {{baseUrl}}/api/pessoas
 Accept: application/json
 
 ### Buscar uma pessoa específica por ID
-GET {{baseUrl}}/api/pessoas/019cfdf4-db14-7d0d-95dd-5a98f3872837
+GET {{baseUrl}}/api/pessoas/019d008d-6f03-7ac7-b6b9-101d85f668ad
 Accept: application/json
 
 
@@ -39,9 +39,8 @@ POST {{baseUrl}}/api/categorias
 Content-Type: application/json
 
 {
-    "nome": "Alimentação",
-    "descricao": "Gastos com comida",
-    "finalidade": 3
+    "descricao": "Despesas",
+    "finalidade": 1
 }
 
 ### Listar todas as categorias
@@ -49,7 +48,7 @@ GET {{baseUrl}}/api/categorias
 Accept: application/json
 
 ### Buscar uma categoria específica por ID
-GET {{baseUrl}}/api/categorias/019cfdf8-d7c1-71bc-a48f-3fbafcdaccd1
+GET {{baseUrl}}/api/categorias/019d008e-1a09-785f-8598-afdea770737b
 Accept: application/json
 
 ### Consultar totais por categoria
@@ -65,10 +64,10 @@ Content-Type: application/json
 {
     "data": "2026-03-17",
     "valor": 50.00,
-    "descricao": "Almoço no restaurante",
+    "descricao": "Receita",
     "tipo": 2,
-    "pessoaId": "019cfdf4-db14-7d0d-95dd-5a98f3872837",
-    "categoriaId": "019cfdf8-d7c1-71bc-a48f-3fbafcdaccd1"
+    "pessoaId": "019d008d-6f03-7ac7-b6b9-101d85f668ad",
+    "categoriaId": "019d008f-4247-7d2c-afaa-0b8876d95647"
 }
 
 ### Listar todas as transações
@@ -76,10 +75,10 @@ GET {{baseUrl}}/api/transacoes
 Accept: application/json
 
 ### Buscar uma transação específica por ID
-GET {{baseUrl}}/api/transacoes/019cfdfa-4d1a-7793-8fa3-383518f3bf37
+GET {{baseUrl}}/api/transacoes/019d0092-e571-762a-8877-b9fd810cf474
 Accept: application/json
 
 ### Listar todas as transações de uma pessoa específica
-GET {{baseUrl}}/api/transacoes/pessoa/019cfdf4-db14-7d0d-95dd-5a98f3872837
+GET {{baseUrl}}/api/transacoes/pessoa/019d008d-6f03-7ac7-b6b9-101d85f668ad
 Accept: application/json
 

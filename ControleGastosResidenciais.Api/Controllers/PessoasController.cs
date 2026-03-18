@@ -27,8 +27,15 @@ public class PessoasController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var novaPessoa = await _pessoaService.CreateAsync(pessoa);
-        return CreatedAtAction(nameof(GetPessoa), new { id = novaPessoa.Id }, novaPessoa);
+        try
+        {
+            var novaPessoa = await _pessoaService.CreateAsync(pessoa);
+            return CreatedAtAction(nameof(GetPessoa), new { id = novaPessoa.Id }, novaPessoa);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
@@ -40,12 +47,18 @@ public class PessoasController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var pessoaAtualizada = await _pessoaService.UpdateAsync(id, pessoa);
+        try
+        {
+            var pessoaAtualizada = await _pessoaService.UpdateAsync(id, pessoa);
+            if (pessoaAtualizada == null)
+                return NotFound($"Pessoa com ID {id} não encontrada");
 
-        if (pessoaAtualizada == null)
-            return NotFound($"Pessoa com ID {id} não encontrada");
-
-        return Ok(pessoaAtualizada);
+            return Ok(pessoaAtualizada);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
