@@ -37,6 +37,20 @@ services:
       - controle-gastos-network
     restart: unless-stopped
 
+  # Frontend Application
+  frontend:
+    build:
+      context: ./ControleGastosResidenciais.Frontend
+      dockerfile: Dockerfile
+    container_name: controle-gastos-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - controle-gastos-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
 

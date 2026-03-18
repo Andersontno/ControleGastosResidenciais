@@ -1,4 +1,11 @@
-# Build results
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+*.userosscache
+
+# .NET Core Build results
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -14,46 +21,6 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Visual Studio files
-.vs/
-*.suo
-*.user
-*.sln.docstates
-*.userosscache
-*.sln.docstates
-
-# Database
-**/Migrations/
-*.db
-*.db-shm
-*.db-wal
-
-# User-specific files
-.vscode/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
-.idea/
-
-# Logs
-logs
-*.log
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
 # .NET Core
 project.lock.json
 project.fragment.lock.json
@@ -66,3 +33,69 @@ packages/
 !**/packages/build/
 *.nuget.props
 *.nuget.targets
+
+# Database
+**/Migrations/
+*.db
+*.db-shm
+*.db-wal
+
+# Node.js Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend Production build
+build/
+dist/
+
+# Frontend Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Frontend Coverage
+coverage/
+
+# Frontend Dependency directories
+jspm_packages/
+
+# Frontend Optional npm cache
+.npm
+
+# Frontend Optional REPL history
+.node_repl_history
+
+# Frontend Output of 'npm pack'
+*.tgz
+
+# Frontend Yarn Integrity
+.yarn-integrity
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
