@@ -44,6 +44,7 @@ public class CategoriaService : ICategoriaService
 
     public async Task<IEnumerable<Categoria>> GetAllAsync()
     {
+        // Realiza uma busca simples para retornar todas as categorias, ordenadas por descrição
         return await _context.Categorias
             .OrderBy(c => c.Descricao)
             .ToListAsync();
@@ -51,13 +52,19 @@ public class CategoriaService : ICategoriaService
 
     public async Task<Categoria?> GetByIdAsync(Guid id)
     {
+        // Realiza uma busca simples para retornar a categoria pelo seu ID
         return await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<object> GetTotaisPorCategoriaAsync()
     {
         /*
-         SQL Query:
+        Geralmente prefiro deixar a responsabilidade de consultas um pouco mais complexas para o banco de dados, porém para isso
+        seria necessário criar uma view, function ou procedure e configurar para rodar os scripts quando iniciar o projeto.
+        Por esse motivo e o intuito do projeto, achei melhor construir a consulta usando LINQ.
+
+        Consulta feita no SQL para me basear na construção da consulta LINQ:
+        SQL Query:
             SELECT
                 c."Id" as "CategoriaId",
                 c."Descricao" as "Descricao",
@@ -70,6 +77,8 @@ public class CategoriaService : ICategoriaService
             GROUP BY c."Id", c."Descricao"
             ORDER BY c."Descricao"
         */
+
+        // Busca para retornar os totais por categoria, ordenados por descrição
         var totaisPorCategoria = await _context.Categorias
             .GroupJoin(_context.Transacoes,
                 c => c.Id,
@@ -91,7 +100,7 @@ public class CategoriaService : ICategoriaService
             .OrderBy(c => c.Descricao)
             .ToListAsync();
 
-        // Calcular totais gerais
+        // Somatório dos valores totais por categoria para calcular os totais gerais
         var totaisGerais = new
         {
             TotalReceitas = totaisPorCategoria.Sum(c => c.TotalReceitas),
@@ -100,6 +109,7 @@ public class CategoriaService : ICategoriaService
             TotalTransacoes = totaisPorCategoria.Sum(c => c.QuantidadeTransacoes)
         };
 
+        // Agrupar os resultados em um objeto para retornar os totais por categoria e os totais gerais
         var resultado = new
         {
             TotaisGerais = totaisGerais,

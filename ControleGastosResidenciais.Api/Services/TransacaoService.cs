@@ -79,6 +79,7 @@ public class TransacaoService : ITransacaoService
 
     public async Task<IEnumerable<Transacao>> GetAllAsync()
     {
+        // Realiza uma busca simples para retornar todas as transações, ordenadas por data de criação
         return await _context.Transacoes
             .OrderByDescending(t => t.DataCriacao)
             .ToListAsync();
@@ -86,11 +87,13 @@ public class TransacaoService : ITransacaoService
 
     public async Task<Transacao?> GetByIdAsync(Guid id)
     {
+        // Realiza uma busca simples para retornar a transação pelo seu ID
         return await _context.Transacoes.FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<IEnumerable<Transacao>> GetByPessoaIdAsync(Guid pessoaId)
     {
+        // Realiza uma busca simples para retornar todas as transações associadas a pessoa informada, ordenadas por data de criação
         return await _context.Transacoes
             .Where(t => t.PessoaId == pessoaId)
             .OrderByDescending(t => t.DataCriacao)
@@ -99,6 +102,7 @@ public class TransacaoService : ITransacaoService
 
     public async Task<IEnumerable<Transacao>> GetByCategoriaIdAsync(Guid categoriaId)
     {
+        // Realiza uma busca simples para retornar todas as transações associadas a categoria informada, ordenadas por data de criação
         return await _context.Transacoes
             .Where(t => t.CategoriaId == categoriaId)
             .OrderByDescending(t => t.DataCriacao)
