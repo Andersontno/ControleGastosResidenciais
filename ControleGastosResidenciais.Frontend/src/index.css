@@ -205,4 +205,41 @@ body {
   .table {
     font-size: 12px;
   }
+
+  .filtro-aplicado {
+    background-color: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  .filtro-aplicado p {
+    margin: 5px 0;
+    color: #1976d2;
+  }
+
+  /* Estilos do resumo de totais */
+  .totais-resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .total-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  .total-item.saldo {
+    grid-column: 1 / -1;
+    font-size: 18px;
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+  }
 }

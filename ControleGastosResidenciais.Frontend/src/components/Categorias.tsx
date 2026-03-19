@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Categoria, CreateCategoriaDto, TipoFinalidade, TipoFinalidadeText } from '../types';
 import { categoriaService } from '../services';
+import { useApp } from '../context/AppContext';
 
 const Categorias: React.FC = () => {
+  const { setActiveTab, setConsultaFiltro } = useApp();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingCategoria, setEditingCategoria] = useState<Categoria | null>(null);
   const [formData, setFormData] = useState<CreateCategoriaDto>({
     descricao: '',
     finalidade: TipoFinalidade.Despesa
@@ -35,47 +36,22 @@ const Categorias: React.FC = () => {
 
     try {
       setError(null);
-      if (editingCategoria) {
-        await categoriaService.update(editingCategoria.id, formData);
-        setEditingCategoria(null);
-      } else {
-        await categoriaService.create(formData);
-      }
-
+      await categoriaService.create(formData);
       setFormData({ descricao: '', finalidade: TipoFinalidade.Despesa });
       await loadCategorias();
     } catch (err) {
-      setError(editingCategoria ? 'Erro ao atualizar categoria' : 'Erro ao criar categoria');
+      setError('Erro ao criar categoria');
       console.error(err);
     }
   };
 
-  const handleEdit = (categoria: Categoria) => {
-    setEditingCategoria(categoria);
-    setFormData({
-      descricao: categoria.descricao,
-      finalidade: categoria.finalidade
+  const abrirConsultasCategoria = (categoria: Categoria) => {
+    setConsultaFiltro({
+      tipo: 'categoria',
+      id: categoria.id,
+      nome: `Transações da categoria: ${categoria.descricao}`
     });
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta categoria?')) {
-      return;
-    }
-
-    try {
-      setError(null);
-      await categoriaService.delete(id);
-      await loadCategorias();
-    } catch (err) {
-      setError('Erro ao excluir categoria');
-      console.error(err);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditingCategoria(null);
-    setFormData({ descricao: '', finalidade: TipoFinalidade.Despesa });
+    setActiveTab('consultas');
   };
 
   if (loading) {
@@ -85,7 +61,7 @@ const Categorias: React.FC = () => {
   return (
     <div>
       <div className="card">
-        <h2>{editingCategoria ? 'Editar Categoria' : 'Nova Categoria'}</h2>
+        <h2>Nova Categoria</h2>
 
         {error && <div className="error">{error}</div>}
 
@@ -118,13 +94,8 @@ const Categorias: React.FC = () => {
 
             <div className="form-group">
               <button type="submit" className="button button-primary">
-                {editingCategoria ? 'Atualizar' : 'Criar'}
+                Criar
               </button>
-              {editingCategoria && (
-                <button type="button" className="button button-secondary" onClick={handleCancel}>
-                  Cancelar
-                </button>
-              )}
             </div>
           </div>
         </form>
@@ -152,16 +123,10 @@ const Categorias: React.FC = () => {
                   <td>
                     <div className="actions">
                       <button
-                        className="button button-secondary"
-                        onClick={() => handleEdit(categoria)}
+                        className="button button-primary"
+                        onClick={() => abrirConsultasCategoria(categoria)}
                       >
-                        Editar
-                      </button>
-                      <button
-                        className="button button-danger"
-                        onClick={() => handleDelete(categoria.id)}
-                      >
-                        Excluir
+                        Transações
                       </button>
                     </div>
                   </td>

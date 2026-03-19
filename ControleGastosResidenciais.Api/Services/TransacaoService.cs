@@ -91,4 +91,12 @@ public class TransacaoService : ITransacaoService
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Transacao>> GetByCategoriaIdAsync(Guid categoriaId)
+    {
+        return await _context.Transacoes
+            .Where(t => t.CategoriaId == categoriaId)
+            .OrderByDescending(t => t.DataCriacao)
+            .ToListAsync();
+    }
+
 }

@@ -24,5 +24,15 @@ export const transacaoService = {
 
   async delete(id: string): Promise<void> {
     await api.delete(`/transacoes/${id}`);
-  }
+  },
+
+  async getByPessoaId(pessoaId: string): Promise<Transacao[]> {
+    const response = await api.get(`/transacoes/pessoa/${pessoaId}`);
+    return response.data;
+  },
+
+  async getByCategoriaId(categoriaId: string): Promise<Transacao[]> {
+    const response = await api.get(`/transacoes/categoria/${categoriaId}`);
+    return response.data;
+  },
 };

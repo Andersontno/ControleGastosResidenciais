@@ -33,4 +33,11 @@ public interface ITransacaoService
     /// <param name="pessoaId">Identificador único da pessoa</param>
     /// <returns>Uma coleção contendo todas as transações da pessoa</returns>
     Task<IEnumerable<Transacao>> GetByPessoaIdAsync(Guid pessoaId);
+
+    /// <summary>
+    /// Recupera todas as transações associadas a uma categoria específica.
+    /// </summary>
+    /// <param name="categoriaId">Identificador único da categoria</param>
+    /// <returns>Uma coleção contendo todas as transações da categoria</returns>
+    Task<IEnumerable<Transacao>> GetByCategoriaIdAsync(Guid categoriaId);
 }

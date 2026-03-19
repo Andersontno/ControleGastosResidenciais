@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Pessoa, CreatePessoaDto } from '../types';
 import { pessoaService } from '../services';
+import { useApp } from '../context/AppContext';
 
 const Pessoas: React.FC = () => {
+  const { setActiveTab, setConsultaFiltro } = useApp();
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,6 +78,15 @@ const Pessoas: React.FC = () => {
   const handleCancel = () => {
     setEditingPessoa(null);
     setFormData({ nome: '', idade: 0 });
+  };
+
+  const abrirConsultasPessoa = (pessoa: Pessoa) => {
+  setConsultaFiltro({
+    tipo: 'pessoa',
+    id: pessoa.id,
+    nome: `Transações de ${pessoa.nome}`
+  });
+  setActiveTab('consultas');
   };
 
   if (loading) {
@@ -161,6 +172,12 @@ const Pessoas: React.FC = () => {
                         onClick={() => handleDelete(pessoa.id)}
                       >
                         Excluir
+                      </button>
+                      <button
+                        className="button button-primary"
+                        onClick={() => abrirConsultasPessoa(pessoa)}
+                      >
+                        Transações
                       </button>
                     </div>
                   </td>

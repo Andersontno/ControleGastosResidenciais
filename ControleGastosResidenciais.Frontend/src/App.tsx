@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './index.css';
+import { AppProvider, useApp } from './context/AppContext';
 import Pessoas from './components/Pessoas';
 import Categorias from './components/Categorias';
 import Transacoes from './components/Transacoes';
 import Relatorios from './components/Relatorios';
+import Consultas from './components/Consultas';
 
-type Tab = 'pessoas' | 'categorias' | 'transacoes' | 'relatorios';
-
-function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('pessoas');
+const AppContent: React.FC = () => {
+  const { activeTab, setActiveTab } = useApp();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -18,6 +18,8 @@ function App() {
         return <Categorias />;
       case 'transacoes':
         return <Transacoes />;
+      case 'consultas':
+        return <Consultas />;
       case 'relatorios':
         return <Relatorios />;
       default:
@@ -52,6 +54,12 @@ function App() {
             Transações
           </button>
           <button
+            className={`nav-button ${activeTab === 'consultas' ? 'active' : ''}`}
+            onClick={() => setActiveTab('consultas')}
+          >
+            Consultas
+          </button>
+          <button
             className={`nav-button ${activeTab === 'relatorios' ? 'active' : ''}`}
             onClick={() => setActiveTab('relatorios')}
           >
@@ -62,6 +70,14 @@ function App() {
         {renderContent()}
       </div>
     </div>
+  );
+};
+
+function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 }
 

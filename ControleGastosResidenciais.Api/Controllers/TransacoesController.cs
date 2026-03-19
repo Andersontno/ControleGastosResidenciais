@@ -76,5 +76,14 @@ public class TransacoesController : ControllerBase
         return Ok(transacoes);
     }
 
+    /// <summary>
+    /// Listar todas as transações de uma categoria específica
+    /// </summary>
+    [HttpGet("categoria/{categoriaId}")]
+    public async Task<ActionResult<IEnumerable<Transacao>>> GetTransacoesByCategoria(Guid categoriaId)
+    {
+        var transacoes = await _transacaoService.GetByCategoriaIdAsync(categoriaId);
+        return Ok(transacoes);
+    }
 
 }
