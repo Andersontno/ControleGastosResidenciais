@@ -17,15 +17,6 @@ export const transacaoService = {
     return response.data;
   },
 
-  async update(id: string, transacao: CreateTransacaoDto): Promise<Transacao> {
-    const response = await api.put(`/transacoes/${id}`, transacao);
-    return response.data;
-  },
-
-  async delete(id: string): Promise<void> {
-    await api.delete(`/transacoes/${id}`);
-  },
-
   async getByPessoaId(pessoaId: string): Promise<Transacao[]> {
     const response = await api.get(`/transacoes/pessoa/${pessoaId}`);
     return response.data;

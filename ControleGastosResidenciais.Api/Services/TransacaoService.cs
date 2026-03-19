@@ -65,6 +65,12 @@ public class TransacaoService : ITransacaoService
             throw new InvalidOperationException("Tipo de transação incompatível com a finalidade da categoria");
         }
 
+        // Validar valor da transação
+        if (transacao.Valor <= 0)
+        {
+            throw new InvalidOperationException("Valor da transação deve ser maior que zero");
+        }
+
         _context.Transacoes.Add(transacao);
         await _context.SaveChangesAsync();
 

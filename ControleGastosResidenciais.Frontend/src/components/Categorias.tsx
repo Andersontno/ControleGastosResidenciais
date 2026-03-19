@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Categoria, CreateCategoriaDto, TipoFinalidade, TipoFinalidadeText } from '../types';
 import { categoriaService } from '../services';
 import { useApp } from '../context/AppContext';
+import { getErrorMessage } from '../utils/errorHandler';
 
 const Categorias: React.FC = () => {
   const { setActiveTab, setConsultaFiltro } = useApp();
@@ -20,7 +21,7 @@ const Categorias: React.FC = () => {
       const data = await categoriaService.getAll();
       setCategorias(data);
     } catch (err) {
-      setError('Erro ao carregar categorias');
+      setError(getErrorMessage(err));
       console.error(err);
     } finally {
       setLoading(false);
@@ -40,7 +41,7 @@ const Categorias: React.FC = () => {
       setFormData({ descricao: '', finalidade: TipoFinalidade.Despesa });
       await loadCategorias();
     } catch (err) {
-      setError('Erro ao criar categoria');
+      setError(getErrorMessage(err));
       console.error(err);
     }
   };

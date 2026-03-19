@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Transacao, CreateTransacaoDto, TipoTransacao, TipoTransacaoText, Categoria, Pessoa } from '../types';
-import { transacaoService, categoriaService, pessoaService } from '../services';
+import { transacaoService } from '../services/transacaoService';
+import { categoriaService } from '../services/categoriaService';
+import { pessoaService } from '../services/pessoaService';
+import { Transacao, Categoria, Pessoa, TipoTransacao, TipoTransacaoText, CreateTransacaoDto } from '../types';
+import { getErrorMessage } from '../utils/errorHandler';
 
 const Transacoes: React.FC = () => {
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingTransacao, setEditingTransacao] = useState<Transacao | null>(null);
   const [formData, setFormData] = useState<CreateTransacaoDto>({
     descricao: '',
     valor: 0,
@@ -17,9 +18,12 @@ const Transacoes: React.FC = () => {
     pessoaId: ''
   });
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const loadData = async () => {
     try {
-      setLoading(true);
       setError(null);
 
       const [transacoesData, categoriasData, pessoasData] = await Promise.all([
@@ -32,16 +36,10 @@ const Transacoes: React.FC = () => {
       setCategorias(categoriasData);
       setPessoas(pessoasData);
     } catch (err) {
-      setError('Erro ao carregar dados');
+      setError(getErrorMessage(err));
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,12 +51,7 @@ const Transacoes: React.FC = () => {
 
     try {
       setError(null);
-      if (editingTransacao) {
-        await transacaoService.update(editingTransacao.id, formData);
-        setEditingTransacao(null);
-      } else {
-        await transacaoService.create(formData);
-      }
+      await transacaoService.create(formData);
 
       setFormData({
         descricao: '',
@@ -71,82 +64,42 @@ const Transacoes: React.FC = () => {
       const transacoesData = await transacaoService.getAll();
       setTransacoes(transacoesData);
     } catch (err) {
-      setError(editingTransacao ? 'Erro ao atualizar transação' : 'Erro ao criar transação');
+      setError(getErrorMessage(err));
       console.error(err);
     }
   };
 
-  const handleEdit = (transacao: Transacao) => {
-    setEditingTransacao(transacao);
-    setFormData({
-      descricao: transacao.descricao,
-      valor: transacao.valor,
-      tipo: transacao.tipo,
-      categoriaId: transacao.categoriaId,
-      pessoaId: transacao.pessoaId
-    });
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta transação?')) {
-      return;
-    }
-
-    try {
-      setError(null);
-      await transacaoService.delete(id);
-      const transacoesData = await transacaoService.getAll();
-      setTransacoes(transacoesData);
-    } catch (err) {
-      setError('Erro ao excluir transação');
-      console.error(err);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditingTransacao(null);
-    setFormData({
-      descricao: '',
-      valor: 0,
-      tipo: TipoTransacao.Despesa,
-      categoriaId: '',
-      pessoaId: ''
-    });
-  };
-
-  const getNomeCategoria = (categoriaId: string) => {
+  const getNomeCategoria = (categoriaId: string): string => {
     const categoria = categorias.find(c => c.id === categoriaId);
     return categoria ? categoria.descricao : 'Categoria não encontrada';
   };
 
-  const getNomePessoa = (pessoaId: string) => {
+  const getNomePessoa = (pessoaId: string): string => {
     const pessoa = pessoas.find(p => p.id === pessoaId);
     return pessoa ? pessoa.nome : 'Pessoa não encontrada';
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', {
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
-    });
+    }).format(value);
   };
 
-  if (loading) {
-    return <div className="loading">Carregando transações...</div>;
-  }
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+  };
 
   return (
-    <div>
+    <div className="page">
+      <h1>Transações</h1>
+
+      {error && <div className="error">{error}</div>}
+
       <div className="card">
-        <h2>{editingTransacao ? 'Editar Transação' : 'Nova Transação'}</h2>
-
-        {error && <div className="error">{error}</div>}
-
-        <form onSubmit={handleSubmit}>
+        <h2>Nova Transação</h2>
+        <form onSubmit={handleSubmit} className="form">
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="descricao">Descrição:</label>
@@ -224,13 +177,8 @@ const Transacoes: React.FC = () => {
 
           <div className="form-group">
             <button type="submit" className="button button-primary">
-              {editingTransacao ? 'Atualizar' : 'Criar'}
+              Criar
             </button>
-            {editingTransacao && (
-              <button type="button" className="button button-secondary" onClick={handleCancel}>
-                Cancelar
-              </button>
-            )}
           </div>
         </form>
       </div>
@@ -250,7 +198,6 @@ const Transacoes: React.FC = () => {
                 <th>Categoria</th>
                 <th>Pessoa</th>
                 <th>Data</th>
-                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -264,22 +211,6 @@ const Transacoes: React.FC = () => {
                   <td>{getNomeCategoria(transacao.categoriaId)}</td>
                   <td>{getNomePessoa(transacao.pessoaId)}</td>
                   <td>{formatDate(transacao.dataCriacao)}</td>
-                  <td>
-                    <div className="actions">
-                      <button
-                        className="button button-secondary"
-                        onClick={() => handleEdit(transacao)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="button button-danger"
-                        onClick={() => handleDelete(transacao.id)}
-                      >
-                        Excluir
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>

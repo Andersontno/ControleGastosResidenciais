@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Pessoa, CreatePessoaDto } from '../types';
 import { pessoaService } from '../services';
 import { useApp } from '../context/AppContext';
+import { getErrorMessage } from '../utils/errorHandler';
 
 const Pessoas: React.FC = () => {
   const { setActiveTab, setConsultaFiltro } = useApp();
@@ -21,7 +22,7 @@ const Pessoas: React.FC = () => {
       const data = await pessoaService.getAll();
       setPessoas(data);
     } catch (err) {
-      setError('Erro ao carregar pessoas');
+      setError(getErrorMessage(err));
       console.error(err);
     } finally {
       setLoading(false);
@@ -47,7 +48,7 @@ const Pessoas: React.FC = () => {
       setFormData({ nome: '', idade: 0 });
       await loadPessoas();
     } catch (err) {
-      setError(editingPessoa ? 'Erro ao atualizar pessoa' : 'Erro ao criar pessoa');
+      setError(editingPessoa ? getErrorMessage(err) : getErrorMessage(err));
       console.error(err);
     }
   };
@@ -70,7 +71,7 @@ const Pessoas: React.FC = () => {
       await pessoaService.delete(id);
       await loadPessoas();
     } catch (err) {
-      setError('Erro ao excluir pessoa');
+      setError(getErrorMessage(err));
       console.error(err);
     }
   };

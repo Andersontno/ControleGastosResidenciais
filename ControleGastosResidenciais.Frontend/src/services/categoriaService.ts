@@ -17,15 +17,6 @@ export const categoriaService = {
     return response.data;
   },
 
-  async update(id: string, categoria: CreateCategoriaDto): Promise<Categoria> {
-    const response = await api.put(`/categorias/${id}`, categoria);
-    return response.data;
-  },
-
-  async delete(id: string): Promise<void> {
-    await api.delete(`/categorias/${id}`);
-  },
-
   async getTotaisPorCategoria(): Promise<any[]> {
     const response = await api.get('/categorias/totais');
     return response.data;
