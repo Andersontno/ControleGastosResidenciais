@@ -9,3 +9,9 @@ public enum TipoFinalidade
     Receita = 2,
     Ambas = 3
 }
+/*
+Observação:
+    O ideal é que TipoFinalidade seja uma tabela no banco de dados para criar uma relação com a tabela de categorias,
+    garantindo a integridade e permitindo a adição de novas finalidades. Porém, pelo escopo e intuito do projeto,
+    achei melhor utilizar um enum para simplificar a implementação e evitar a necessidade de criar uma tabela adicional e popular dados manualmente.
+*/
